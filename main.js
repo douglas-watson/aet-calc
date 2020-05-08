@@ -7,19 +7,8 @@ import store from './store.js'
 // import * as Plotly from "plotly.js-dist";
 
 async function getTCX() {
-  const response = await fetch("30768899072.tcx");
+  const response = await fetch("/30768899072.tcx");
   return await response.text();
-}
-
-function computePpbDrift(parser, xmin, xmax) {
-  let xhalf = xmin + ( xmax - xmin ) / 2;
-
-  let firstHalf = computeMetrics(parser, xmin, xhalf)
-  let secondHalf = computeMetrics(parser, xhalf, xmax)
-
-  console.log(firstHalf, secondHalf);
-  // TODO: fix division by zero
-  return (secondHalf.ppb_mean - firstHalf.ppb_mean) / secondHalf.ppb_mean;
 }
 
 function updateSummary(state) {
@@ -30,6 +19,7 @@ function updateSummary(state) {
   summaryTable.innerHTML = Mustache.render(summaryTemplate.innerHTML, {
     ...state.summaryData,
     heart_rate_mean: state.summaryData.heart_rate_mean.toFixed(1),
+    distance_km: state.summaryData.distance_km.toFixed(2),
     pace_mean_kph: state.summaryData.pace_mean_kph.toFixed(2),
     pace_mean_mpk: state.summaryData.pace_mean_mpk.toFixed(2),
     pace_drift: state.summaryData.pace_drift.toFixed(1)
@@ -37,9 +27,25 @@ function updateSummary(state) {
 }
 
 function attach() {
+  // ------------- tmp ----------------------
+  let input = document.querySelector("input");
+  input.addEventListener("change", () => {
+    if (input.files.length > 0) {
+      let file = input.files[0];
+      let reader = new FileReader()
+      reader.addEventListener('load', () => {
+          console.log(reader.result.slice(0, 100))
+          let workout = Workout.fromTCX(file.name, reader.result);
+          attachPlot('viz', workout, store);
+      })
+      reader.readAsText(file);
+    }
+  });
+  // ---------------- tmp ----------------------
+
   getTCX()
     .then((text) => {
-      let workout = Workout.fromTCX("30768lkj.tcx", text);
+      let workout = Workout.fromTCX("30768899072.tcx", text);
       attachPlot('viz', workout, store);
     })
 

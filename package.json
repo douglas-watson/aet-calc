@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "browserify main.js -o bundle.js -p esmify -v",
-    "watch": "watchify main.js -o bundle.js -p esmify -v"
+    "watch": "watchify main.js -o bundle.js -p esmify -v & reload -b"
   },
   "author": "",
   "license": "ISC",
@@ -16,8 +16,9 @@
   },
   "devDependencies": {
     "babel-preset-es2015": "^6.24.1",
-    "esmify": "^2.1.1",
     "browserify": "^16.5.1",
+    "esmify": "^2.1.1",
+    "reload": "^3.0.4",
     "watchify": "^3.11.1"
   }
 }
