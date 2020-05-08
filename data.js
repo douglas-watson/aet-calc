@@ -50,8 +50,8 @@ export class Workout {
               3600,
       }))
       .map((row) => ({
-          ...row,
-          pace_per_beat: row.pace_kph / row.heart_rate_bpm
+        ...row,
+        pace_per_beat: row.pace_kph / row.heart_rate_bpm,
       }));
 
     return new Workout({ trackpoints });
@@ -78,7 +78,7 @@ export class Workout {
       return d;
     }
 
-    let elapsed_sec = this.trackpoints.map( row => row.elapsed_sec);
+    let elapsed_sec = this.trackpoints.map((row) => row.elapsed_sec);
     let heart_rate = this.trackpoints.map((row) => row.heart_rate_bpm);
     let distance_km = this.trackpoints.map((row) => row.distance_km);
     let pace_kph = this.trackpoints.map((row) => row.pace_kph);
@@ -90,24 +90,23 @@ export class Workout {
     d.pace_mean_kph = arrayMean(pace_kph);
     d.pace_mean_mpk = 60 / d.pace_mean_kph;
 
-
     // Drift: separate first and second half
     let t0 = elapsed_sec[0];
     let tf = elapsed_sec[elapsed_sec.length - 1];
     let tm = t0 + (tf - t0) / 2;
 
     let firstHalf = arrayMean(
-        this.trackpoints
-        .filter( row => row.elapsed_sec < tm)
-        .map( row => row.pace_per_beat)
-    )
+      this.trackpoints
+        .filter((row) => row.elapsed_sec < tm)
+        .map((row) => row.pace_per_beat)
+    );
     let secondHalf = arrayMean(
-        this.trackpoints
-        .filter( row => row.elapsed_sec >= tm)
-        .map( row => row.pace_per_beat )
-    )
+      this.trackpoints
+        .filter((row) => row.elapsed_sec >= tm)
+        .map((row) => row.pace_per_beat)
+    );
 
-    d.pace_drift = (secondHalf - firstHalf) / firstHalf * 100;
+    d.pace_drift = ((secondHalf - firstHalf) / firstHalf) * 100;
 
     return d;
   }
