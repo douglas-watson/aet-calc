@@ -1,0 +1,23 @@
+{
+  "name": "aet-calc",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "browserify main.js -o bundle.js -p esmify -v",
+    "watch": "watchify main.js -o bundle.js -p esmify -v"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "mustache": "^4.0.1",
+    "tcx-js": "file:../tcx-js"
+  },
+  "devDependencies": {
+    "babel-preset-es2015": "^6.24.1",
+    "esmify": "^2.1.1",
+    "browserify": "^16.5.1",
+    "watchify": "^3.11.1"
+  }
+}

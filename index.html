@@ -1,0 +1,46 @@
+<html>
+  <head>
+    <title>AeT calculator - first steps</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  </head>
+  <body>
+    <h1>AeT Calculator</h1>
+
+    <script id="summaryTemplate" type="x-tmpl-mustache">
+      <table id="summary">
+          <tr>
+              <td>Heart rate min:</td>
+              <td>{{ heart_rate_min }}</td>
+          </tr>
+          <tr>
+              <td>Heart rate max:</td>
+              <td>{{ heart_rate_max }}</td>
+          </tr>
+          <tr>
+              <td>Heart rate mean:</td>
+              <td>{{ heart_rate_mean }}</td>
+          </tr>
+          <tr>
+              <td>Pace mean [km/h]:</td>
+              <td>{{ pace_mean_kph }}</td>
+          </tr>
+          <tr>
+              <td>Pace mean [min/km]:</td>
+              <td>{{ pace_mean_mpk }}</td>
+          </tr>
+          <tr>
+              <td>Pa:Hr drift [%]:</td>
+              <td>{{ pace_drift }}</td>
+          </tr>
+      </table>
+    </script>
+
+    <div id="summary">
+        <!-- Summary table goes here -->
+    </div>
+    <div id="viz">
+        <!-- Plotly displayed here -->
+    </div>
+    <script type="module" src="bundle.js"></script>
+  </body>
+</html>
