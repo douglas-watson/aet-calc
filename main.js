@@ -54,10 +54,10 @@ function attachFileHandler(id) {
 
 function main() {
   const id = "viz";
+  updateSummary(store.state);
   attachLocalTCX(id);
   attachFileHandler(id);
   store.registerListener("summaryData", updateSummary);
-  updateSummary(store.state);
 }
 
 main();

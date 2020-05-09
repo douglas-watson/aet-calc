@@ -10,6 +10,11 @@ const plotlyLayout = {
   yaxis: {
     fixedrange: true,
   },
+  margin: { l: 40, r: 10, t: 40, b: 10 },
+};
+
+const plotlyConfig = {
+  responsive: true,
 };
 
 function prepData(workout) {
@@ -30,7 +35,8 @@ function prepData(workout) {
 
 export function attachPlot(id, workout, store) {
   let myPlot = document.getElementById(id);
-  Plotly.newPlot(id, prepData(workout), plotlyLayout);
+  let layout = { ...plotlyLayout, title: workout.date.toLocaleString() };
+  Plotly.newPlot(id, prepData(workout), layout, plotlyConfig);
   myPlot.on("plotly_afterplot", () => {
     store.setSummaryData(
       workout.filterDistRange(...myPlot.layout.xaxis.range).summarize()

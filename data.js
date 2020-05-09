@@ -20,12 +20,14 @@ import { Parser } from "tcx-js";
 // }
 
 export class Workout {
-  constructor({ trackpoints }) {
+  constructor({ trackpoints, date }) {
     this.trackpoints = trackpoints;
+    this.date = date;
   }
 
   static fromTCX(filename, text = null) {
     let parser = new Parser(filename, text);
+    console.log(parser);
     let trackpoints = parser.activity.trackpoints
       // keep only sane bpm range
       .filter((row) => row.heart_rate_bpm > 0 && row.heart_rate_bpm <= 250)
@@ -54,7 +56,8 @@ export class Workout {
         pace_per_beat: row.pace_kph / row.heart_rate_bpm,
       }));
 
-    return new Workout({ trackpoints });
+    let date = new Date(parser.activity.startingEpoch);
+    return new Workout({ trackpoints, date });
   }
 
   filterDistRange(distMin, distMax) {
@@ -62,6 +65,7 @@ export class Workout {
       trackpoints: this.trackpoints.filter(
         (row) => row.distance_km >= distMin && row.distance_km <= distMax
       ),
+      date: this.date,
     });
   }
 
@@ -73,6 +77,7 @@ export class Workout {
       distance_km: 0,
       pace_mean_kph: 0,
       pace_mean_mpk: 0,
+      pace_drift: 0,
     };
     if (this.trackpoints.length == 0) {
       return d;

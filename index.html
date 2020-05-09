@@ -1,13 +1,19 @@
+<!DOCTYPE html>
 <html>
   <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>AeT calculator - first steps</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bulma@0.8.2/css/bulma.min.css"
+    />
+
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
   </head>
   <body>
-    <h1>AeT Calculator</h1>
-
     <script id="summaryTemplate" type="x-tmpl-mustache">
-      <table id="summary">
+      <table id="summary" class="table">
           <tr>
               <td>Heart rate min:</td>
               <td>{{ heart_rate_min }}</td>
@@ -38,15 +44,41 @@
           </tr>
       </table>
     </script>
+    <section class="section">
+      <div class="container">
+        <div class="columns is-multiline">
+          <div class="column is-full">
+            <h1 class="title">AeT Calculator</h1>
+            <div class="notification">
+              <p>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
+                pellentesque finibus elit id pellentesque. Aliquam mattis vel mi
+                at tincidunt. Phasellus sed volutpat eros. Vivamus vitae
+                efficitur velit. Proin feugiat lacinia nisl et placerat.
+                Maecenas pharetra tellus id justo euismod aliquet.
+              </p>
+              <input type="file" id="txcInput" />
+            </div>
+          </div>
 
-    <input type="file" id="txcInput" />
+          <div class="column is-narrow">
+            <div class="notification is-white">
+              <div id="summary">
+                <!-- Summary table goes here -->
+              </div>
+            </div>
+          </div>
 
-    <div id="summary">
-      <!-- Summary table goes here -->
-    </div>
-    <div id="viz">
-      <!-- Plotly displayed here -->
-    </div>
+          <div class="column">
+            <div class="notification is-white">
+              <div id="viz">
+                <!-- Plotly displayed here -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
     <script type="module" src="bundle.js"></script>
   </body>
 </html>
