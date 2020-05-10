@@ -39,8 +39,8 @@ export class Workout {
       // generate a Trackpoint
       .map((row, i, arr) => ({
         elapsed_sec: row.elapsed_sec,
-        distance_km: row.distance_km,
         heart_rate_bpm: row.heart_rate_bpm,
+        distance_km: row.distance_km,
         // Pace defined as delta_dist / delta_t. delta_t guaranteed to be > 0 from
         // filter above.
         pace_kph:
@@ -50,6 +50,12 @@ export class Workout {
                 (row.elapsed_sec - arr[i - 1].elapsed_sec)) *
               3600,
       }))
+      // Smooth pace:
+      .map((row, i, arr) => ({
+        ...row,
+        pace_kph: arrayMean(arr.slice(i - 2, i + 2).map((row) => row.pace_kph)),
+      }))
+      // Add derived metrics:
       .map((row) => ({
         ...row,
         pace_per_beat: row.pace_kph / row.heart_rate_bpm,
