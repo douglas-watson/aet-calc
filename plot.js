@@ -3,14 +3,26 @@
 // We don't import plotly as it doesn't like browserify. Linked from index.html instead.
 
 const plotlyLayout = {
-  title: "Heart rate over time",
   xaxis: {
     rangeslider: {},
+    title: "Distance [km]",
   },
   yaxis: {
     fixedrange: true,
+    title: "Heart rate [bpm]",
   },
-  margin: { l: 40, r: 10, t: 40, b: 10 },
+  yaxis2: {
+    title: "Pace [km/h]",
+    side: "right",
+    overlaying: "y",
+  },
+  margin: { l: 50, r: 40, t: 0, b: 10 },
+  legend: {
+    orientation: "h",
+    x: 1,
+    xanchor: "right",
+    y: 1.05,
+  },
 };
 
 const plotlyConfig = {
@@ -20,23 +32,33 @@ const plotlyConfig = {
 function prepData(workout) {
   const x = [];
   const y1 = [];
+  const y2 = [];
   for (let row of workout.trackpoints) {
     x.push(row.distance_km);
     y1.push(row.heart_rate_bpm);
+    y2.push(row.pace_kph);
   }
   return [
     {
       x: x,
       y: y1,
       mode: "lines",
+      name: "Heart rate",
+      yaxis: "y1",
+    },
+    {
+      x: x,
+      y: y2,
+      mode: "lines",
+      name: "Pace",
+      yaxis: "y2",
     },
   ];
 }
 
 export function attachPlot(id, workout, store) {
   let myPlot = document.getElementById(id);
-  let layout = { ...plotlyLayout, title: workout.date.toLocaleString() };
-  Plotly.newPlot(id, prepData(workout), layout, plotlyConfig);
+  Plotly.newPlot(id, prepData(workout), plotlyLayout, plotlyConfig);
   myPlot.on("plotly_afterplot", () => {
     store.setSummaryData(
       workout.filterDistRange(...myPlot.layout.xaxis.range).summarize()

@@ -6,6 +6,7 @@ import store from "./store.js";
 
 // import * as Plotly from "plotly.js-dist";
 
+// Update the summary data table
 function updateSummary(state) {
   let summaryTable = document.getElementById("summary");
   let summaryTemplate = document.getElementById("summaryTemplate");
@@ -18,9 +19,25 @@ function updateSummary(state) {
     pace_mean_kph: state.summaryData.pace_mean_kph.toFixed(2),
     pace_mean_mpk: state.summaryData.pace_mean_mpk.toFixed(2),
     pace_drift: state.summaryData.pace_drift.toFixed(1),
+    duration: new Date(state.summaryData.elapsed_sec * 1000)
+      .toISOString()
+      .substring(11, 19),
+    date: state.summaryData.date.toLocaleDateString(),
+    start_time: state.summaryData.date.toLocaleTimeString(),
   });
 }
 
+// Update the filename next to file input
+function updateFileName(state) {
+  document.getElementById("filename-display").innerText = state.fileInfo.name;
+}
+
+/* 
+We have three ways to load a file:
+- From a file input: get file object and load it
+- Drag and drop: same as from form, but triggered by a different event.
+- From local storage: file contents already available as string, TCX data just needs to be parsed again.
+*/
 function attachLocalTCX(id) {
   let localTCX = localStorage.getItem("tcxData");
   if (localTCX) {
@@ -32,32 +49,54 @@ function attachLocalTCX(id) {
   }
 }
 
-function attachFileHandler(id) {
+// From a File object (from input or drop event): parse and plot
+function loadFile(plotId, file) {
+  let reader = new FileReader();
+  reader.addEventListener("load", () => {
+    localStorage.setItem("tcxData", reader.result);
+    localStorage.setItem("tcxName", file.name);
+    store.setFileInfo({ name: file.name });
+
+    let workout = Workout.fromTCX(file.name, reader.result);
+    attachPlot(plotId, workout, store);
+  });
+
+  reader.readAsText(file);
+}
+
+function attachFileHandler(plotId) {
   // old skool listeners in listeners
   let input = document.querySelector("input");
   input.addEventListener("change", () => {
     if (input.files.length > 0) {
       let file = input.files[0];
-      let reader = new FileReader();
-      reader.addEventListener("load", () => {
-        localStorage.setItem("tcxData", reader.result);
-        localStorage.setItem("tcxName", file.name);
-
-        let workout = Workout.fromTCX(file.name, reader.result);
-        attachPlot(id, workout, store);
-      });
-
-      reader.readAsText(file);
+      loadFile(plotId, file);
     }
   });
 }
 
+function attachDropzone(plotId, dzId) {
+  const dropzone = document.getElementById(dzId);
+  dropzone.addEventListener("dragover", (event) => {
+    event.preventDefault();
+  });
+
+  dropzone.addEventListener("drop", (event) => {
+    console.log(event.dataTransfer.files[0]);
+    loadFile(plotId, event.dataTransfer.files[0]);
+    event.preventDefault();
+  });
+}
+
 function main() {
-  const id = "viz";
   updateSummary(store.state);
-  attachLocalTCX(id);
-  attachFileHandler(id);
+  updateFileName(store.state);
+  const plotId = "viz";
+  attachDropzone(plotId, "dropzone");
+  attachLocalTCX(plotId);
+  attachFileHandler(plotId);
   store.registerListener("summaryData", updateSummary);
+  store.registerListener("fileInfo", updateFileName);
 }
 
 main();

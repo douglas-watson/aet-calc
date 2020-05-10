@@ -27,7 +27,6 @@ export class Workout {
 
   static fromTCX(filename, text = null) {
     let parser = new Parser(filename, text);
-    console.log(parser);
     let trackpoints = parser.activity.trackpoints
       // keep only sane bpm range
       .filter((row) => row.heart_rate_bpm > 0 && row.heart_rate_bpm <= 250)
@@ -78,6 +77,7 @@ export class Workout {
       pace_mean_kph: 0,
       pace_mean_mpk: 0,
       pace_drift: 0,
+      date: this.date,
     };
     if (this.trackpoints.length == 0) {
       return d;
@@ -92,6 +92,7 @@ export class Workout {
     d.heart_rate_max = arrayMax(heart_rate);
     d.heart_rate_mean = arrayMean(heart_rate);
     d.distance_km = arrayMax(distance_km) - arrayMin(distance_km);
+    d.elapsed_sec = arrayMax(elapsed_sec) - arrayMin(elapsed_sec);
     d.pace_mean_kph = arrayMean(pace_kph);
     d.pace_mean_mpk = 60 / d.pace_mean_kph;
 
@@ -111,7 +112,7 @@ export class Workout {
         .map((row) => row.pace_per_beat)
     );
 
-    d.pace_drift = ((secondHalf - firstHalf) / firstHalf) * 100;
+    d.pace_drift = ((firstHalf - secondHalf) / firstHalf) * 100;
 
     return d;
   }

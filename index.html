@@ -3,82 +3,147 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>AeT calculator - first steps</title>
+    <title>AeT calculator</title>
+    <meta name="author" content="Douglas Watson" />
+    <meta
+      name="description"
+      content="This tool calculates heart rate drift to help you determine your
+    Aerobic Threshold (AeT), following the Uphill Athlete methodology"
+    />
+
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bulma@0.8.2/css/bulma.min.css"
     />
 
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+    <style>
+      p {
+        margin-bottom: 20px;
+      }
+    </style>
   </head>
   <body>
-    <script id="summaryTemplate" type="x-tmpl-mustache">
-      <table id="summary" class="table">
-          <tr>
-              <td>Heart rate min:</td>
-              <td>{{ heart_rate_min }}</td>
-          </tr>
-          <tr>
-              <td>Heart rate max:</td>
-              <td>{{ heart_rate_max }}</td>
-          </tr>
-          <tr>
-              <td>Heart rate mean:</td>
-              <td>{{ heart_rate_mean }}</td>
-          </tr>
-          <tr>
-              <td>Distance [km]:</td>
-              <td>{{ distance_km }}</td>
-          </tr>
-          <tr>
-              <td>Pace mean [km/h]:</td>
-              <td>{{ pace_mean_kph }}</td>
-          </tr>
-          <tr>
-              <td>Pace mean [min/km]:</td>
-              <td>{{ pace_mean_mpk }}</td>
-          </tr>
-          <tr>
-              <td>Pa:Hr drift [%]:</td>
-              <td>{{ pace_drift }}</td>
-          </tr>
-      </table>
-    </script>
-    <section class="section">
-      <div class="container">
-        <div class="columns is-multiline">
-          <div class="column is-full">
-            <h1 class="title">AeT Calculator</h1>
-            <div class="notification">
-              <p>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-                pellentesque finibus elit id pellentesque. Aliquam mattis vel mi
-                at tincidunt. Phasellus sed volutpat eros. Vivamus vitae
-                efficitur velit. Proin feugiat lacinia nisl et placerat.
-                Maecenas pharetra tellus id justo euismod aliquet.
-              </p>
-              <input type="file" id="txcInput" />
-            </div>
-          </div>
+    <div id="dropzone">
+      <script id="summaryTemplate" type="x-tmpl-mustache">
+        <table id="summary" class="table">
+            <tr>
+                <td>Pa:Hr drift [%]:</td>
+                <td><b>{{ pace_drift }}</b></td>
+            </tr>
+            <tr>
+                <td>Heart rate mean:</td>
+                <td>{{ heart_rate_mean }}</td>
+            </tr>
+            <tr>
+                <td>Heart rate min:</td>
+                <td>{{ heart_rate_min }}</td>
+            </tr>
+            <tr>
+                <td>Heart rate max:</td>
+                <td>{{ heart_rate_max }}</td>
+            </tr>
+            <tr>
+                <td>Duration:</td>
+                <td>{{ duration }}</td>
+            </tr>
+            <tr>
+                <td>Distance [km]:</td>
+                <td>{{ distance_km }}</td>
+            </tr>
+            <tr>
+                <td>Pace mean [km/h]:</td>
+                <td>{{ pace_mean_kph }}</td>
+            </tr>
+            <tr>
+                <td>Pace mean [min/km]:</td>
+                <td>{{ pace_mean_mpk }}</td>
+            </tr>
+            <tr>
+                <td>Workout date:</td>
+                <td>{{ date }}</td>
+            </tr>
+            <tr>
+                <td>Start time:</td>
+                <td>{{ start_time }}</td>
+            </tr>
+        </table>
+      </script>
+      <section class="section">
+        <div class="container">
+          <div class="columns is-multiline">
+            <div class="column is-full">
+              <h1 class="title">AeT Calculator</h1>
+              <div class="notification">
+                <p>
+                  This tool calculates heart rate drift to help determine your
+                  Aerobic Threshold (AeT), following the
+                  <a href="https://www.uphillathlete.com/heart-rate-drift/"
+                    >Uphill Athlete</a
+                  >
+                  methodology. After a warmup, run on flat ground for 1 hour at
+                  a pace you think is close to your upper aerobic limit and
+                  record the workout with a GPS watch. Download the TCX file
+                  from your fitness tracking website (Garmin, Fitbit...) and
+                  upload it here. Zoom on the plot to the interval where you ran
+                  at steady pace. The table will show your calculated Pa:Hr
+                  drift, pace, heartrate, and other metrics for that interval.
+                </p>
 
-          <div class="column is-narrow">
-            <div class="notification is-white">
+                <p>
+                  You ran close to your AeT if your Pa:Hr drifted by 5% over an
+                  hour. The Pa:Hr drift compares the Pace-to-hear-rate ratio
+                  (pace in km/h) of the first half of the selected interval to
+                  the second half. A value of 5% means that you ran on average
+                  5% slower at constant bpm during the second half, or your
+                  heart rate was 5% higher at constant pace.
+                </p>
+
+                <p><i>Note: your data never leaves your browser.</i></p>
+
+                <div class="file has-name is-fullwidth">
+                  <label class="file-label">
+                    <input class="file-input" type="file" id="tcxInput" />
+                    <span class="file-cta">
+                      <span class="file-icon">
+                        <i class="fas fa-upload"></i>
+                      </span>
+                      <span class="file-label">
+                        Upload TCX file...
+                      </span>
+                    </span>
+                    <span class="file-name" id="filename-display"></span>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <div class="column is-narrow">
               <div id="summary">
                 <!-- Summary table goes here -->
               </div>
             </div>
-          </div>
 
-          <div class="column">
-            <div class="notification is-white">
-              <div id="viz">
-                <!-- Plotly displayed here -->
+            <div class="column">
+              <div class="notification is-white">
+                <div id="viz">
+                  <!-- Plotly displayed here -->
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </section>
-    <script type="module" src="bundle.js"></script>
+      </section>
+      <section>
+        <div class="content has-text-centered">
+          <p>
+            Built by Douglas Watson, 2020. Source code on <a href="">github</a>.
+            MIT License.
+          </p>
+        </div>
+      </section>
+      <script type="module" src="bundle.js"></script>
+    </div>
   </body>
 </html>
