@@ -5,8 +5,8 @@
   "main": "main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "browserify main.js -o bundle.js -p esmify -v",
-    "watch": "watchify main.js -o bundle.js -p esmify -v & reload -b"
+    "build": "cp src/index.html dist/ && browserify src/main.js -o dist/bundle.js -p esmify -v",
+    "watch": "watchify src/main.js -o src/bundle.js -p esmify -v & reload -b -d src/"
   },
   "author": "Douglas Watson",
   "license": "MIT",
