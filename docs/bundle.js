@@ -6953,8 +6953,8 @@ const plotlyLayout = {
   },
   legend: {
     orientation: "h",
-    x: 1,
-    xanchor: "right",
+    x: 0,
+    xanchor: "left",
     y: 1.05
   }
 };

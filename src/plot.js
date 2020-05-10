@@ -19,8 +19,8 @@ const plotlyLayout = {
   margin: { l: 50, r: 40, t: 0, b: 10 },
   legend: {
     orientation: "h",
-    x: 1,
-    xanchor: "right",
+    x: 0,
+    xanchor: "left",
     y: 1.05,
   },
 };
