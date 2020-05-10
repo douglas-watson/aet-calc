@@ -7,9 +7,7 @@ This is a browser-based tool to calculate heart rate drift during an activity re
 
 ## How to use it?
 
-Check back after the next commit for a direct link
-
-Load a TCX file by drag and drop or with the file picker.
+Open the [live page](https://douglas-watson.github.io/aet-calc/index.html) and follow the instructions. You can load a TCX file by drag-and-drop or with the file picker.
 
 ![Screenshot](screenshot.png)
 
