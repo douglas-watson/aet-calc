@@ -32,7 +32,13 @@ And to build for distribution:
 npm run build
 ```
 
-The resulting index.html and bundle.js files (the only two files) are created in the `dist/` folder. These can be hosted by a static file server.
+The resulting index.html and bundle.js files (the only two files) are created in the `dist/` folder. These can be hosted by a static file server. To update the version hosted on github pages, run:
+
+```
+npm run build && npm run publish
+```
+
+Then commit and push.
 
 ### Structure
 

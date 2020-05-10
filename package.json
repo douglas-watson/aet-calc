@@ -5,7 +5,8 @@
   "main": "main.js",
   "scripts": {
     "build": "cp src/index.html dist/ && browserify src/main.js -o dist/bundle.js -p esmify -v",
-    "watch": "watchify src/main.js -o src/bundle.js -p esmify -v & reload -b -d src/"
+    "watch": "watchify src/main.js -o src/bundle.js -p esmify -v & reload -b -d src/",
+    "publish": "cp dist/* docs/"
   },
   "author": "Douglas Watson",
   "license": "MIT",
