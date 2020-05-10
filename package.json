@@ -4,7 +4,6 @@
   "description": "A browser-based heart rate drift calculator to help you determine your Aerobic Threshold (AeT), following the Uphill Athlete methodology.",
   "main": "main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "build": "cp src/index.html dist/ && browserify src/main.js -o dist/bundle.js -p esmify -v",
     "watch": "watchify src/main.js -o src/bundle.js -p esmify -v & reload -b -d src/"
   },
