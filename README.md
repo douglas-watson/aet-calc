@@ -16,8 +16,13 @@ Open the [live page](https://douglas-watson.github.io/aet-calc/index.html) and f
 To extend this project, check it out and install npm dependencies:
 
 ```
+# Workaround to install forked tcx-js:
+git clone https://github.com/douglas-watson/tcx-js.git
+cd tcx-js && npm install && cd ..
+
+# Get this package and install all other dependencies
 git clone https://github.com/douglas-watson/aet-calc.git
-npm install
+cd aet-calc && npm install
 ```
 
 To run a web server with live-reload, live-bundling etc.:
