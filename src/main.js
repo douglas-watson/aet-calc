@@ -18,6 +18,7 @@ function updateSummary(state) {
     distance_km: state.summaryData.distance_km.toFixed(2),
     pace_mean_kph: state.summaryData.pace_mean_kph.toFixed(2),
     pace_mean_mpk: state.summaryData.pace_mean_mpk.toFixed(2),
+    pace_mean_mpk_formatted: state.summaryData.pace_mean_mpk_formatted,
     pace_drift: state.summaryData.pace_drift.toFixed(1),
     duration: new Date(state.summaryData.elapsed_sec * 1000)
       .toISOString()
