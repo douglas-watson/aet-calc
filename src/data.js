@@ -82,6 +82,7 @@ export class Workout {
       distance_km: 0,
       pace_mean_kph: 0,
       pace_mean_mpk: 0,
+      pace_mean_mpk_formatted: '0:00',
       pace_drift: 0,
       date: this.date,
     };
@@ -101,6 +102,7 @@ export class Workout {
     d.elapsed_sec = arrayMax(elapsed_sec) - arrayMin(elapsed_sec);
     d.pace_mean_kph = arrayMean(pace_kph);
     d.pace_mean_mpk = 60 / d.pace_mean_kph;
+    d.pace_mean_mpk_formatted = formatMPKPace(d.pace_mean_mpk);
 
     // Drift: separate first and second half
     let t0 = elapsed_sec[0];
@@ -137,4 +139,13 @@ function arrayMax(values) {
 // Returns 0 if values is empty array.
 function arrayMean(values) {
   return values.reduce((c, n) => c + n, 0) / values.length || 0;
+}
+
+function formatMPKPace(val) {
+  const minutes = Math.floor(val);
+  const seconds = Math.round((val % 1) * 60);
+
+  const secondsPrefixed = seconds < 10 ? `0${seconds}` : seconds;
+
+  return `${minutes}:${secondsPrefixed}`;
 }
